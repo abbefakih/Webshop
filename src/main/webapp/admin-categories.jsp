@@ -1,0 +1,9 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.List,model.Category,model.User,model.Role" %>
+<% User u=(User)session.getAttribute("user"); if(u==null||u.getRole()!=Role.ADMIN){response.sendRedirect(request.getContextPath()+"/login.jsp");return;} List<Category> cs=(List<Category>)request.getAttribute("categories"); String err=request.getParameter("error"); %>
+<!doctype html><html><head><title>Manage Categories</title><style>body{font-family:Arial;max-width:1000px;margin:30px auto;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px}input{padding:6px;width:90%}.inline{display:inline}</style></head><body>
+<h1>Manage Categories</h1><p><a href="<%=request.getContextPath()%>/admin.jsp">← Admin</a></p><%if(err!=null){%><p style="color:red"><%=err%></p><%}%>
+<h2>Add Category</h2><form action="<%=request.getContextPath()%>/admin-categories" method="post"><input type="hidden" name="action" value="add"><input name="name" placeholder="Name" required><input name="description" placeholder="Description"><button>Add</button></form>
+<table><tr><th>ID</th><th>Name</th><th>Description</th><th>Actions</th></tr><%for(Category c:cs){String f="c"+c.getId();%><tr><td><%=c.getId()%></td><td><input form="<%=f%>" name="name" value="<%=c.getName()%>" required></td><td><input form="<%=f%>" name="description" value="<%=c.getDescription()%>"></td><td>
+<form id="<%=f%>" class="inline" action="<%=request.getContextPath()%>/admin-categories" method="post"><input type="hidden" name="action" value="update"><input type="hidden" name="id" value="<%=c.getId()%>"><button>Save</button></form>
+<form class="inline" action="<%=request.getContextPath()%>/admin-categories" method="post" onsubmit="return confirm('Delete this category?')"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<%=c.getId()%>"><button>Delete</button></form></td></tr><%}%></table></body></html>
