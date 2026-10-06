@@ -97,4 +97,8 @@
 
 </body>
 
+<<<<<<< ours
 </html>
+=======
+</html>
+>>>>>>> theirs

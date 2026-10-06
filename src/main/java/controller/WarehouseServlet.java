@@ -35,7 +35,11 @@ public class WarehouseServlet extends HttpServlet {
 
             res.sendRedirect(
                     req.getContextPath() +
+<<<<<<< ours
                     "/login.jsp"
+=======
+                            "/login.jsp"
+>>>>>>> theirs
             );
 
             return;
@@ -69,7 +73,11 @@ public class WarehouseServlet extends HttpServlet {
 
             res.sendRedirect(
                     req.getContextPath() +
+<<<<<<< ours
                     "/login.jsp"
+=======
+                            "/login.jsp"
+>>>>>>> theirs
             );
 
             return;
@@ -96,7 +104,11 @@ public class WarehouseServlet extends HttpServlet {
          */
         res.sendRedirect(
                 req.getContextPath() +
+<<<<<<< ours
                 "/warehouse"
+=======
+                        "/warehouse"
+>>>>>>> theirs
         );
     }
 }

@@ -9,15 +9,15 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet({"/admin-products","/admin-categories","/admin-users","/logout"})
+@WebServlet({"/admin-products","/admin-categories","/ad min-users","/logout"})
 public class AdminServlet extends HttpServlet {
     private ProductService products; private CategoryService categories; private UserService users;
     public void init(){products=new ProductService();categories=new CategoryService();users=new UserService();}
 
     protected void doGet(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException{
-        String path=req.getServletPath();
+        String path=req.getServletPath(); // Hämtar exakt URLsom skrevs
         if("/logout".equals(path)){logout(req,res);return;}
-        if(!admin(req)){res.sendRedirect(req.getContextPath()+"/login.jsp");return;}
+        if(!admin(req)){res.sendRedirect(req.getContextPath()+"/login.jsp");return;} //säkerhetskontroll
         try{
             if("/admin-products".equals(path)){req.setAttribute("products",products.getAllProducts());req.setAttribute("categories",categories.getAllCategories());req.getRequestDispatcher("/admin-products.jsp").forward(req,res);}
             else if("/admin-categories".equals(path)){req.setAttribute("categories",categories.getAllCategories());req.getRequestDispatcher("/admin-categories.jsp").forward(req,res);}
@@ -41,7 +41,7 @@ public class AdminServlet extends HttpServlet {
             res.sendRedirect(req.getContextPath()+path+"?error="+msg);
         }
     }
-    private void product(HttpServletRequest r){
+    private void product(HttpServletRequest r){ // hjälpmetoder som läser av textfält från html
         String a=r.getParameter("action");
         if("add".equals(a))products.addProduct(new Product(0,r.getParameter("name"),Double.parseDouble(r.getParameter("price")),Integer.parseInt(r.getParameter("stock")),Integer.parseInt(r.getParameter("categoryId"))));
         else if("update".equals(a))products.updateProduct(new Product(Integer.parseInt(r.getParameter("id")),r.getParameter("name"),Double.parseDouble(r.getParameter("price")),Integer.parseInt(r.getParameter("stock")),Integer.parseInt(r.getParameter("categoryId"))));

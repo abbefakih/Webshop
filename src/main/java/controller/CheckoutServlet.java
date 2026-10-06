@@ -110,7 +110,6 @@ public class CheckoutServlet extends HttpServlet {
                         items
                 );
 
-
         /*
          * Kontrollera resultat
          */
@@ -130,20 +129,12 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-
         /*
-         * Order lyckades.
-         *
-         * Töm cart.
+         Order lyckades.
+         Töm cart.
          */
-
         request.getSession()
                 .removeAttribute("cart");
-
-
-        /*
-         * Skicka till order confirmation
-         */
 
         response.sendRedirect(
                 request.getContextPath()
