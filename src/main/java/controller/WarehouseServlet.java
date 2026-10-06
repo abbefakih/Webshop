@@ -1,5 +1,6 @@
 package controller;
 
+import dto.OrderDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,11 +12,13 @@ import model.User;
 import service.OrderService;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/warehouse")
 public class WarehouseServlet extends HttpServlet {
 
-    private final OrderService orders = new OrderService();
+    private final OrderService orders =
+            new OrderService();
 
     @Override
     protected void doGet(
@@ -23,18 +26,27 @@ public class WarehouseServlet extends HttpServlet {
             HttpServletResponse res)
             throws ServletException, IOException {
 
-        User u = (User) req.getSession().getAttribute("user");
+        User u =
+                (User) req.getSession()
+                        .getAttribute("user");
 
-        if (u == null || u.getRole() != Role.WAREHOUSE) {
+        if (u == null ||
+                u.getRole() != Role.WAREHOUSE) {
+
             res.sendRedirect(
-                    req.getContextPath() + "/login.jsp"
+                    req.getContextPath() +
+                    "/login.jsp"
             );
+
             return;
         }
 
+        List<OrderDTO> orderDTOs =
+                orders.getAllOrders();
+
         req.setAttribute(
                 "orders",
-                orders.getAllOrders()
+                orderDTOs
         );
 
         req.getRequestDispatcher(
@@ -48,12 +60,18 @@ public class WarehouseServlet extends HttpServlet {
             HttpServletResponse res)
             throws ServletException, IOException {
 
-        User u = (User) req.getSession().getAttribute("user");
+        User u =
+                (User) req.getSession()
+                        .getAttribute("user");
 
-        if (u == null || u.getRole() != Role.WAREHOUSE) {
+        if (u == null ||
+                u.getRole() != Role.WAREHOUSE) {
+
             res.sendRedirect(
-                    req.getContextPath() + "/login.jsp"
+                    req.getContextPath() +
+                    "/login.jsp"
             );
+
             return;
         }
 
@@ -63,7 +81,9 @@ public class WarehouseServlet extends HttpServlet {
         if (orderIdParameter != null) {
 
             int orderId =
-                    Integer.parseInt(orderIdParameter);
+                    Integer.parseInt(
+                            orderIdParameter
+                    );
 
             orders.updateOrderStatus(
                     orderId,
@@ -71,8 +91,12 @@ public class WarehouseServlet extends HttpServlet {
             );
         }
 
+        /*
+         * Post Redirect Get
+         */
         res.sendRedirect(
-                req.getContextPath() + "/warehouse"
+                req.getContextPath() +
+                "/warehouse"
         );
     }
 }
