@@ -1,6 +1,5 @@
-jsp
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List,model.Order,model.User,model.Role" %>
+<%@ page import="java.util.List,dto.OrderDTO,model.User,model.Role" %>
 
 <%
     User u = (User) session.getAttribute("user");
@@ -10,12 +9,14 @@ jsp
         return;
     }
 
-    List<Order> os = (List<Order>) request.getAttribute("orders");
+    List<OrderDTO> os =
+            (List<OrderDTO>) request.getAttribute("orders");
 %>
 
 <!doctype html>
 
 <html>
+
 <head>
     <title>Warehouse</title>
 </head>
@@ -24,7 +25,9 @@ jsp
 
 <h1>Warehouse</h1>
 
-<p>Welcome, <%= u.getUsername() %>!</p>
+<p>
+    Welcome, <%= u.getUsername() %>!
+</p>
 
 <table border="1" cellpadding="8">
 
@@ -35,7 +38,7 @@ jsp
         <th>Action</th>
     </tr>
 
-    <% for (Order o : os) { %>
+    <% for (OrderDTO o : os) { %>
 
     <tr>
 
@@ -83,10 +86,15 @@ jsp
 </table>
 
 <p>
-    <a href="<%= request.getContextPath() %>/home.jsp">Home</a>
+    <a href="<%= request.getContextPath() %>/home.jsp">
+        Home
+    </a>
     |
-    <a href="<%= request.getContextPath() %>/logout">Logout</a>
+    <a href="<%= request.getContextPath() %>/logout">
+        Logout
+    </a>
 </p>
 
 </body>
+
 </html>
