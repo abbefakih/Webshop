@@ -2,6 +2,7 @@ package service;
 
 import dao.OrderDAO;
 import dao.OrderDAOImpl;
+import dto.OrderDTO;
 import model.Order;
 import model.OrderItem;
 
@@ -9,6 +10,7 @@ import database.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService {
@@ -18,7 +20,6 @@ public class OrderService {
     public OrderService() {
         orderDAO = new OrderDAOImpl();
     }
-
 
     public int checkout(
             int userId,
@@ -42,9 +43,9 @@ public class OrderService {
 
                     String stockSql =
                             "UPDATE webshop.products " +
-                                    "SET stock = stock - ? " +
-                                    "WHERE id = ? " +
-                                    "AND stock >= ?";
+                            "SET stock = stock - ? " +
+                            "WHERE id = ? " +
+                            "AND stock >= ?";
 
                     try (var statement =
                                  connection.prepareStatement(stockSql)) {
@@ -67,9 +68,6 @@ public class OrderService {
                         int updated =
                                 statement.executeUpdate();
 
-                        /*
-                         * 0 rows = insufficient stock
-                         */
                         if (updated == 0) {
 
                             connection.rollback();
@@ -78,7 +76,6 @@ public class OrderService {
                         }
                     }
                 }
-
 
                 /*
                  * 2. Skapa order
@@ -89,7 +86,6 @@ public class OrderService {
                                 userId,
                                 items
                         );
-
 
                 /*
                  * 3. Allt lyckades
@@ -115,18 +111,31 @@ public class OrderService {
         }
     }
 
+    /*
+     * Hämtar orders från DAO och
+     * omvandlar Model -> DTO.
+     */
+    public List<OrderDTO> getAllOrders() {
 
-    public List<Order> getOrdersByUser(int userId) {
+        List<Order> orders =
+                orderDAO.getAllOrders();
 
-        return orderDAO.getOrdersByUser(userId);
+        List<OrderDTO> orderDTOs =
+                new ArrayList<>();
+
+        for (Order order : orders) {
+
+            orderDTOs.add(
+                    new OrderDTO(
+                            order.getId(),
+                            order.getUserId(),
+                            order.getStatus()
+                    )
+            );
+        }
+
+        return orderDTOs;
     }
-
-
-    public List<Order> getAllOrders() {
-
-        return orderDAO.getAllOrders();
-    }
-
 
     public void updateOrderStatus(
             int orderId,
